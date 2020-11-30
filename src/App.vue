@@ -1,26 +1,29 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <h1>Users</h1>
+  <ul>
+    <li v-for="user in users" :key="user.id">
+      <h1>{{ user.username }}</h1>
+      <h2>{{ user.email }}</h2>
+      <h3>{{ user.address.city }}</h3>
+      <h4>{{ user.phone }}</h4>
+    </li>
+  </ul>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { computed, onMounted } from "vue";
+import { state, actions } from "@/store";
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
-</script>
+  name: "App",
+  setup() {
+    const users = computed(() => state.users);
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+    onMounted(() => {
+      actions.getUsers();
+    });
+
+    return { users };
+  },
+};
+</script>
