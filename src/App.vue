@@ -1,6 +1,8 @@
 <template>
-  <h1>Users</h1>
-  <ul>
+  <h1>Users List</h1>
+  <button @click="showListUsers">{{ data.textButton }}</button>
+
+  <ul v-if="data.showUsers">
     <li v-for="user in users" :key="user.id">
       <h1>{{ user.username }}</h1>
       <h2>{{ user.email }}</h2>
@@ -11,19 +13,32 @@
 </template>
 
 <script>
-import { computed, onMounted } from "vue";
+import { computed, onMounted, reactive } from "vue";
 import { state, actions } from "@/store";
 
 export default {
   name: "App",
+
   setup() {
+    const data = reactive({
+      showUsers: false,
+      textButton: "View List Users",
+    });
+
     const users = computed(() => state.users);
+
+    const showListUsers = () => {
+      data.showUsers = !data.showUsers;
+      data.showUsers
+        ? (data.textButton = "Hide List Users")
+        : (data.textButton = "View List Users");
+    };
 
     onMounted(() => {
       actions.getUsers();
     });
 
-    return { users };
+    return { data, users, showListUsers };
   },
 };
 </script>
